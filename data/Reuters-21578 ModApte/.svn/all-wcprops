@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/jbowl/!svn/ver/1/trunk/data/Reuters-21578%20ModApte
+END
+10-categories.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/jbowl/!svn/ver/1/trunk/data/Reuters-21578%20ModApte/10-categories.txt
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/jbowl/!svn/ver/1/trunk/data/Reuters-21578%20ModApte/readme.txt
+END
+train.xml
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/jbowl/!svn/ver/1/trunk/data/Reuters-21578%20ModApte/train.xml
+END
+test.xml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/jbowl/!svn/ver/1/trunk/data/Reuters-21578%20ModApte/test.xml
+END

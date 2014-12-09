@@ -1,0 +1,10 @@
+topics.acq
+topics.corn
+topics.crude
+topics.earn
+topics.grain
+topics.interest
+topics.money-fx
+topics.ship
+topics.trade
+topics.wheat

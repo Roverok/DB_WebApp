@@ -1,0 +1,262 @@
+
+Node[] nodes;                               // deklarácia Node[]
+PFont f;                                    // definovanie triedy písma
+
+String loadtree[] = " ";                        // load file in .js
+String[][] treeTable;
+String[] parse;
+
+int lvl = 1;
+int num = 1;
+int levels = 3;
+int nodeX;
+int nodeY;
+int leafX = nodeX+200;                      // začiatočná pozícia listového uzla - os x
+int leafY = nodeY;                          // začiatočná pozícia listového uzla - os y
+
+
+
+// Setup the Processing Canvas ------------------------------------------------
+
+void setup() {
+  size(680, 460);  // veľkosť hlavnáho okna
+
+  // nacitanie suborov
+
+  loadtree = loadStrings("treeOut.txt");
+  splitFile();
+  getLevel();  // lvl - vrati pocet urovni stromu
+  nodesCount();
+  
+  
+  nodeX = width/2;
+  nodeY = height/(2*lvl);
+
+  nodes = new Node[num];                    // definovanie počtu uzlov
+  f = createFont("Arial", 16, true);        // definovanie písma; 
+
+  nodes[0] = new Node(nodeX, nodeY, 30, "uzol_0", nodes);                // vytvorenie hlavného uzla
+  for (int i=1; i<num; i++) {
+    nodes[i] = new Node(leafX+i*30, leafY+i*60, 30, "uzol_"+i, nodes);   // cyklus - vytvorenie listových uzlov
+  }
+
+  //println(treeTable[1][0]);
+}
+
+
+// Main draw loop -------------------------------------------------------------
+
+void draw() {
+  background(#222222);
+  ellipseMode(CENTER);
+  rect(0, 0, 50, 50);
+  for (int i=0; i<num; i++) {
+    textFont(f, 5);
+    fill(0);
+    nodes[i].update();
+    nodes[i].display();
+  }
+}
+
+
+void mouseReleased() {
+  for (int i=0; i<num; i++) {
+    nodes[i].releaseEvent();
+  }
+}
+void mousePressed() {
+  if (mouseX < 50 & mouseY< 50) {
+    println("max.uroven stromu: " + lvl);
+    //loadFile();
+    //draw();
+    //splitFile();
+    //println("max.uroven stromu: " + getLevel());
+  }
+}
+
+
+class Node {
+
+  int x, y;
+  int boxx, boxy;
+  int posX;
+  int posY;
+  int size, minsize;
+  String meno;
+  boolean over;
+  boolean press;
+  boolean locked = false;
+  boolean otherslocked = false;
+  Node[] others;
+
+  Node(int ix, int iy, int is, String m, Node[] o) {
+    x = ix;
+    y = iy;
+    size = is;
+    minsize = size;
+    meno = m;
+    boxx = x+posX;
+    boxy = y+posY;
+    others = o;
+  }
+
+
+  void update() {
+    boxx = x+posX;
+    boxy = y+posY;
+
+    for (int i=0; i<others.length; i++) {
+      if (others[i].locked == true) {
+        otherslocked = true;
+        break;
+      } 
+      else {
+        otherslocked = false;
+      }
+    }
+
+    if (otherslocked == false) {
+      overEvent();
+      pressEvent();
+    }
+
+    if (press) {
+      if (meno=="uzol_0") {
+        x = nodeX = lock(mouseX, 0+size/2, width-size/2);
+        y = nodeY = lock(mouseY, 0+size/2, height-size/2);
+      } 
+      else {
+        posX = lock(mouseX-x, -(x)+size/2, x-(size/2)-1);
+        posY = lock(mouseY-y, 0-y+size/2, height-y-size/2);
+      }
+    }
+  }
+
+
+  void overEvent() {
+    if (overRect(boxx-size/2, boxy-size/2, size, size)) {
+      over = true;
+    } 
+    else {
+      over = false;
+    }
+  }
+
+
+  void pressEvent() {
+    if (over && mousePressed || locked) {
+      press = true;
+      locked = true;
+      size=size+10;
+    } 
+    else {
+      press = false;
+    }
+  }
+
+
+  void releaseEvent() {
+    locked = false;
+    if (over && size>minsize) {
+      size=size-10;
+    }
+  }
+
+
+  void display() {
+    line(nodeX, nodeY, x+posX, y+posY);                      // čiara medzi uzlami
+    stroke(#000000);
+
+    textFont(f, 16);                    // zadefinovanie textu - (font f, size 16)
+    fill(#ffffff);                      // farba textu
+    text(meno, boxx+size, boxy+8);      // obsah textu, pozícia x, pozícia y
+
+    fill(#00ccff);
+    if (meno=="uzol_0") {
+      ellipse(nodeX, nodeY, size+5, size+5);
+    } 
+    else {
+      ellipse(boxx, boxy, size, size);
+    }    
+    if (over || press) {
+      fill(#ffffff);
+      if (meno=="uzol_0") {
+        ellipse(nodeX, nodeY, size+5, size+5);
+      } 
+      else {
+        ellipse(boxx, boxy, size, size);
+      }
+    }
+  }
+}
+
+
+boolean overRect(int x, int y, int width, int height) {
+  if (mouseX > x && mouseX < x+width && 
+    mouseY > y && mouseY < y+height) {
+    return true;
+  } 
+  else {
+    return false;
+  }
+}
+
+
+int lock(int val, int minv, int maxv) { 
+  return  min(max(val, minv), maxv);
+}
+
+void printFile() {
+  println("súbor má " + loadtree.length + " riadkov");
+  for (int i=0; i < loadtree.length; i++) {
+    println(loadtree[i]);
+  }
+  println("--------------------------------");
+}
+
+
+void splitFile() {
+  treeTable = new String[loadtree.length][0];
+  for (int j=0; j < loadtree.length; j++) {
+    parse = split(loadtree[j], ' ');
+    for (int i=0; i < parse.length; i++) {
+      treeTable[i][j] = parse[i];
+      //println(parse[i]); // vypis vsetkych prvkov tabulky
+    }
+  }
+  //printTable(); // vypise tabulku do konzoly
+}
+
+void printTable() {
+  for (int j=0; j < loadtree.length; j++) {
+    for (int i=0; i < parse.length; i++) {
+      print(treeTable[i][j]+ "\t");
+    }
+    println("");
+  }
+}
+
+int nodesCount() {
+  num = 0;
+  int pom = 0;
+  for (int j=0; j < loadtree.length; j++) {
+    num++;
+  }
+  return num;
+}
+
+int getLevel() {
+  int pom = 0;
+  lvl = 0;
+  for (int j=0; j < loadtree.length; j++) {
+    pom = (int) treeTable[0][j];
+    if (lvl < pom) {
+      lvl = pom;
+    }
+  }
+  lvl++;
+  return lvl;
+}
+
+
+

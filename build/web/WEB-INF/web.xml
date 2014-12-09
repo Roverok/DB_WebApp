@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <display-name>gg_http</display-name>
+    
+ <servlet>
+    <description></description>
+    <display-name>Chart</display-name>
+    <servlet-name>Chart</servlet-name>
+    <servlet-class>gg.Chart</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Chart</servlet-name>
+    <url-pattern>/Chart</url-pattern>
+  </servlet-mapping>
+
+    
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
+
+    <env-entry>
+        <env-entry-name>admin_login</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>admin</env-entry-value>
+    </env-entry>    
+    <env-entry>
+	<env-entry-name>file-upload</env-entry-name>
+
+	<env-entry-type>java.lang.String</env-entry-type>
+
+	<env-entry-value>D:\diplomovka\upload\</env-entry-value>
+     </env-entry> 
+    <env-entry>
+        <env-entry-name>admin_pass</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>admin</env-entry-value>
+    </env-entry>
+    <env-entry>
+        <env-entry-name>user_login</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>user</env-entry-value>
+    </env-entry>
+    <env-entry>
+        <env-entry-name>user_pass</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>user</env-entry-value>
+
+    </env-entry>
+	
+<context-param> 
+    <description>Path to save files</description> 
+    <param-name>file-upload</param-name> 
+    <param-value>D:\diplomovka\upload\</param-value> 
+</context-param>
+
+</web-app>
